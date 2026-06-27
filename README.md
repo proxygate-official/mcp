@@ -25,10 +25,17 @@ Remote MCP server (streamable HTTP):
 https://gateway.proxygate.ai/mcp
 ```
 
+Browsing the catalog (`browse_apis`, `describe_endpoint`, `get_pricing`) works without an account. To **call an endpoint and spend**, you authenticate with an API key.
+
+### Get an API key
+
+Create one at [app.proxygate.ai/wallets](https://app.proxygate.ai/wallets). No Solana wallet needed: an API key (`pg_live_...`) is a scoped, revocable token tied to your prepaid balance. Top it up with USDC and your agent spends per call.
+
 ### Claude Code / Claude Desktop
 
 ```
-claude mcp add --transport http proxygate https://gateway.proxygate.ai/mcp
+claude mcp add --transport http proxygate https://gateway.proxygate.ai/mcp \
+  --header "Authorization: Bearer pg_live_..."
 ```
 
 ### Any MCP client (config)
@@ -38,11 +45,16 @@ claude mcp add --transport http proxygate https://gateway.proxygate.ai/mcp
   "mcpServers": {
     "proxygate": {
       "type": "http",
-      "url": "https://gateway.proxygate.ai/mcp"
+      "url": "https://gateway.proxygate.ai/mcp",
+      "headers": {
+        "Authorization": "Bearer pg_live_..."
+      }
     }
   }
 }
 ```
+
+Clients that support OAuth can connect without a key and authorize in the browser; the server advertises OAuth discovery on a 401.
 
 Proxygate is also published in the official MCP Registry as `ai.proxygate/mcp`.
 
